@@ -1,3 +1,4 @@
+![pack.png](https://raw.githubusercontent.com/RatchetStuff/NoRocketUsage/refs/heads/latest/pack.png)
 # No Rocket Usage
 Rocket flying is annoying! (and unfair, too.)
 
