@@ -9,4 +9,4 @@ It prevents firework usage by breaking the equipped elytra upon usage, simple as
 This project was made as an experiment to make a functional GitHub repository. Nonetheless, this project will be maintained and updated from time to time on breaking changes.
 
 ## License
-No Rocket Usage is licensed under the Unlicense license.
+No Rocket Usage is unlicensed.
