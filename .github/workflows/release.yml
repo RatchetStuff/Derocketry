@@ -13,11 +13,12 @@ jobs:
         
         - name: Create release assets
           env:
-            name: ${{ github.repository }}#*/
+            repository: ${{ github.repository }}
             branch: ${{ github.ref_name }}
             tag: ${{ github.run_number }}
           run:
-            git archive --format=zip --output="./bin/${name}+${branch}-build.${tag}" HEAD
+            zipname="${repository#*/}+${branch}-build.${tag}.zip"
+            git archive --format=zip --output="./bin/${zipname}" HEAD
         
         - name: Upload assets to GitHub
           uses: AButler/upload-release-assets@v4.0
