@@ -27,6 +27,7 @@ jobs:
             branch: ${{ github.ref_name }}
             build: ${{ github.run_number }}
           run: |
+            echo Hello World!
             git archive --format=zip --output="bin/${GITHUB_REPOSITORY#*/}+${GITHUB_REF_NAME}-${tag}.zip" HEAD
         
         - name: Upload assets to GitHub
