@@ -15,10 +15,11 @@ jobs:
           env:
             repository: ${{ github.repository }}
             branch: ${{ github.ref_name }}
-            tag: ${{ github.run_number }}
+            build: ${{ github.run_number }}
           run:
-            zipname="${repository#*/}+${branch}-build.${tag}.zip"
-            git archive --format=zip --output=bin/${zipname} HEAD
+            zipname="${repository#*/}+${branch}-build.${build}.zip"
+            echo zipname
+            git archive --format=zip --output="bin/${zipname}" HEAD
         
         - name: Upload assets to GitHub
           uses: AButler/upload-release-assets@v4.0
