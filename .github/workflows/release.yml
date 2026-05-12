@@ -18,7 +18,7 @@ jobs:
           run: |
             gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --title="${GITHUB_REF_NAME}-${tag}" \
               --generate-notes
         
         - name: Create assets
@@ -26,13 +26,12 @@ jobs:
             repository: ${{ github.repository }}
             branch: ${{ github.ref_name }}
             build: ${{ github.run_number }}
-          run:
-            zipname="${repository#*/}+${branch}-build.${build}.zip"
-            echo zipname
-            git archive --format=zip --output="bin/${zipname}" HEAD
+          run: |
+            git archive --format=zip --output="bin/${GITHUB_REPOSITORY#*/}+${GITHUB_REF_NAME}-${tag}.zip" HEAD
         
         - name: Upload assets to GitHub
           uses: AButler/upload-release-assets@v4.0
           with:
             files: "bin/*"
             repo-token: ${{ secrets.GITHUB_TOKEN }}
+            release-tag: build.${{ github.run_number }}
