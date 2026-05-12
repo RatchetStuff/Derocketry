@@ -36,4 +36,3 @@ jobs:
           with:
             files: "bin/*"
             repo-token: ${{ secrets.GITHUB_TOKEN }}
-            release-tag: build.${{ github.run_number }}
