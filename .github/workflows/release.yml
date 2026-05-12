@@ -18,7 +18,7 @@ jobs:
             tag: ${{ github.run_number }}
           run:
             zipname="${repository#*/}+${branch}-build.${tag}.zip"
-            git archive --format=zip --output="./bin/${zipname}" HEAD
+            git archive --format=zip --output=bin/${zipname} HEAD
         
         - name: Upload assets to GitHub
           uses: AButler/upload-release-assets@v4.0
