@@ -11,7 +11,17 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v6
         
-        - name: Create release assets
+        - name: Create release
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: build.${{ github.run_number }}
+          run: |
+            gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+              --generate-notes
+        
+        - name: Create assets
           env:
             repository: ${{ github.repository }}
             branch: ${{ github.ref_name }}
