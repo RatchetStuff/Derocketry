@@ -1,9 +1,10 @@
 name: Release
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Release version"
+                required: true
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -11,27 +12,25 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v6
         
+        - name: Create assets
+          env:
+            version: v${{ github.event.inputs.version }}
+          run: |
+            git archive --format=zip --output="bin/${GITHUB_REPOSITORY#*/}-${version}+${GITHUB_REF_NAME}.zip" HEAD
+        
         - name: Create release
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            tag: build.${{ github.run_number }}
+            tag: v${{ github.event.inputs.version }}
           run: |
             gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REF_NAME}-${tag}" \
+              --title="${tag}+${GITHUB_REF_NAME}" \
               --generate-notes
-        
-        - name: Create assets
-          env:
-            repository: ${{ github.repository }}
-            branch: ${{ github.ref_name }}
-            tag: build.${{ github.run_number }}
-          run: |
-            git archive --format=zip --output="bin/${GITHUB_REPOSITORY#*/}+${GITHUB_REF_NAME}-${tag}.zip" HEAD
         
         - name: Upload assets to GitHub
           uses: AButler/upload-release-assets@v4.0
           with:
             files: "bin/*"
             repo-token: ${{ secrets.GITHUB_TOKEN }}
-            release-tag: build.${{ github.run_number }}
+            release-tag: v${{ github.event.inputs.version }}
