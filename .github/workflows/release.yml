@@ -1,0 +1,29 @@
+name: Release
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v6
+        
+        - name: Create release assets
+          env:
+            repository: ${{ github.repository }}
+            branch: ${{ github.ref_name }}
+            tag: ${{ github.run_number }}
+          run:
+            git archive bin \
+                --format=zip \
+                --output="${repository#*/}+${branch}-build.${tag}" \
+        
+        - name: Upload assets to GitHub
+          uses: AButler/upload-release-assets@v4.0
+          with:
+            files: "bin/*"
+            repo-token: ${{ secrets.GITHUB_TOKEN }}
+            release-tag: build.${{ github.run_number }}
