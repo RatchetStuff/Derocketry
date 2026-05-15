@@ -1,0 +1,10 @@
+{
+    "pack": {
+        "description": "Rockets are annoying!",
+        "pack_format": 7,
+        "supported_formats": [
+            7,
+            26
+        ],
+    }
+}

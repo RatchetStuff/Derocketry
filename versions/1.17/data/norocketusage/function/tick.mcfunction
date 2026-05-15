@@ -1,0 +1,1 @@
+execute as @a[nbt={FallFlying:1b,Inventory:[{Slot:102b,id:"minecraft:elytra"}]}] at @s if entity @e[distance=..3,nbt={Life:0},type=firework_rocket] run item modify entity @s armor.chest norocketusage:break
