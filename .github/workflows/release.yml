@@ -6,7 +6,7 @@ on:
           description: Appended version
           required: true
           type: string
-          default: "rc"
+          default: "a"
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
               mc_version=$(basename "$dir")
               (
                 cd "$dir"
-                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}+${{ steps.date.outputs.date }}-${version}+${mc_version}.zip *
+                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}+${{ steps.date.outputs.date }}${version}+${mc_version}.zip *
               )
             done
         
