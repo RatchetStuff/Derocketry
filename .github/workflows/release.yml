@@ -32,10 +32,11 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: v${{ github.event.inputs.r_version }}
+            minecraft: ${{ github.event.inputs.mc_version }}
           run: |
             gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${tag}+${GITHUB_REF_NAME}" \
+              --title="${tag}+${minecraft}" \
               --generate-notes
         
         - name: Upload assets to GitHub
