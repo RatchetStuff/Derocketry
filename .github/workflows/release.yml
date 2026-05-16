@@ -26,7 +26,7 @@ jobs:
             mc_version: ${{ github.event.inputs.mc_version }}
           run: |
             cd versions/${mc_version}
-            zip -r ${git rev-parse --show-toplevel}/bin/${GITHUB_REPOSITORY#*/}-v${r_version}+v${mc_version}.zip *
+            zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}-v${r_version}+v${mc_version}.zip *
         
         - name: Create release
           env:
