@@ -1,14 +1,6 @@
 name: Release
 on:
     workflow_dispatch:
-        inputs:
-            r_version:
-                description: "Release version"
-                required: true
-            mc_version:
-                description: "Minecraft version"
-                required: true
-
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -19,24 +11,30 @@ jobs:
         - name: Install dependencies
           run: |
             sudo apt install zip
+
+        - name: Get current date
+          id: date
+          run: |
+            echo "date=$(date +%F)" >> $GITHUB_OUTPUT
         
         - name: Create assets
-          env:
-            r_version: ${{ github.event.inputs.r_version }}
-            mc_version: ${{ github.event.inputs.mc_version }}
           run: |
-            cd versions/${mc_version}
-            zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}-v${r_version}+v${mc_version}.zip *
+            for dir in versions/*/; do
+              mc_version=$(basename "$dir")
+              (
+                cd "$dir"
+                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}-${{ steps.date.outputs.date }}+v${mc_version}.zip *
+              )
+            done
         
         - name: Create release
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            tag: v${{ github.event.inputs.r_version }}
-            minecraft: ${{ github.event.inputs.mc_version }}
+            tag: ${{ steps.date.outputs.date }}
           run: |
             gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${tag}+${minecraft}" \
+              --title="${GITHUB_REPOSITORY#*/}-${tag}" \
               --generate-notes
         
         - name: Upload assets to GitHub
@@ -44,4 +42,4 @@ jobs:
           with:
             files: "bin/*"
             repo-token: ${{ secrets.GITHUB_TOKEN }}
-            release-tag: v${{ github.event.inputs.r_version }}
+            release-tag: ${{ steps.date.outputs.date }}
