@@ -23,7 +23,7 @@ jobs:
               mc_version=$(basename "$dir")
               (
                 cd "$dir"
-                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}-${{ steps.date.outputs.date }}+v${mc_version}.zip *
+                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}+${{ steps.date.outputs.date }}+${mc_version}.zip *
               )
             done
         
@@ -34,7 +34,7 @@ jobs:
           run: |
             gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/}-${tag}" \
+              --title="${GITHUB_REPOSITORY#*/}+${tag}" \
               --generate-notes
         
         - name: Upload assets to GitHub
