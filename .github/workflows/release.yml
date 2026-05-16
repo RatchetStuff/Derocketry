@@ -1,6 +1,12 @@
 name: Release
 on:
     workflow_dispatch:
+      inputs:
+        version:
+          description: Appended version
+          required: true
+          type: string
+          default: "rc"
 jobs:
     release:
         runs-on: ubuntu-latest
@@ -15,15 +21,17 @@ jobs:
         - name: Get current date
           id: date
           run: |
-            echo "date=$(date +%F)" >> $GITHUB_OUTPUT
+            echo "date=$(date +"%Y%m%d")" >> $GITHUB_OUTPUT
         
         - name: Create assets
+          env:
+            version: ${{ inputs.version }}
           run: |
             for dir in versions/*/; do
               mc_version=$(basename "$dir")
               (
                 cd "$dir"
-                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}+${{ steps.date.outputs.date }}+${mc_version}.zip *
+                zip -r $(git rev-parse --show-toplevel)/bin/${GITHUB_REPOSITORY#*/}+${{ steps.date.outputs.date }}-${version}+${mc_version}.zip *
               )
             done
         
@@ -32,10 +40,7 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ steps.date.outputs.date }}
           run: |
-            gh release create "$tag" \
-              --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/}+${tag}" \
-              --generate-notes
+            gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/}+${tag}" --generate-notes
         
         - name: Upload assets to GitHub
           uses: AButler/upload-release-assets@v4.0
