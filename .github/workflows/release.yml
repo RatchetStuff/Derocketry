@@ -38,7 +38,7 @@ jobs:
         - name: Create release
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            tag: ${{ steps.date.outputs.date }}
+            tag: ${{ steps.date.outputs.date }}${{ inputs.version }}
           run: |
             gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="${GITHUB_REPOSITORY#*/}+${tag}" --generate-notes
         
@@ -47,4 +47,4 @@ jobs:
           with:
             files: "bin/*"
             repo-token: ${{ secrets.GITHUB_TOKEN }}
-            release-tag: ${{ steps.date.outputs.date }}
+            release-tag: ${{ steps.date.outputs.date }}${{ inputs.version }}
